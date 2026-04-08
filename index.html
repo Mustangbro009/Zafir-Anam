@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zafir AI | Central Command</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: { 400: '#fb923c', 500: '#f97316', 600: '#ea580c' },
+                        surface: { 800: '#1e293b', 900: '#0f172a', 950: '#020617' }
+                    },
+                    fontFamily: { sans: ['Inter', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800;900&display=swap');
+        
+        body { background-color: #020617; color: #cbd5e1; }
+        h1, h2, h3, h4 { letter-spacing: -0.025em; }
+
+        /* Essential Chart Container Constraints */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 35vh;
+            min-height: 250px;
+            max-height: 400px;
+        }
+
+        /* Custom Athletic Range Slider */
+        input[type=range] { -webkit-appearance: none; width: 100%; background: transparent; }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none; height: 20px; width: 20px; border-radius: 50%;
+            background: #f97316; cursor: pointer; margin-top: -6px; border: 3px solid #0f172a;
+            box-shadow: 0 0 10px rgba(249, 115, 22, 0.5);
+        }
+        input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 8px; cursor: pointer; background: #334155; border-radius: 4px; }
+
+        /* Mockup Stylings */
+        .glass-panel { background: rgba(30, 41, 59, 0.4); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.05); }
+        .phone-mockup { box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7), inset 0 0 0 1px rgba(255, 255, 255, 0.1); }
+        .chat-bubble-ai { border-bottom-left-radius: 4px; }
+        .chat-bubble-user { border-bottom-right-radius: 4px; }
+        
+        /* Pulse Animation for Live Status */
+        @keyframes pulse-ring { 0% { transform: scale(0.8); opacity: 0.5; } 100% { transform: scale(2.5); opacity: 0; } }
+        .status-dot::before { content: ''; position: absolute; left: 0; top: 0; display: block; width: 100%; height: 100%; background-color: #22c55e; border-radius: 50%; animation: pulse-ring 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite; }
+    </style>
+    
+    <!-- Chosen Palette: High-Performance Dark Mode. Deep Slate (slate-950) with Vibrant Athletic Orange (orange-500) representing intensity, iron, and energy. -->
+    <!-- Application Structure Plan: A highly integrated, SaaS-style dashboard. 
+         1. Hero: The Hook.
+         2. Psychology: The empathetic diagnosis of his current audience friction.
+         3. Frontend Integration (Speech): The WhatsApp simulation proving the AI's empathy.
+         4. Backend Engine (ROE): Translating Notebook 21. Visualizing Meta API sync, UTM tracking, and Content ROI to cure his burnout.
+         5. Projection Calculator: Interactive math proving the financial upside.
+         This flow moves the client from realizing his problem, seeing the frontend fix, understanding the backend logic, and calculating his new wealth. -->
+    <!-- Visualization & Content Choices: 
+         - Phone UI Mockup -> Goal: Demonstrate Frontend Empathy. Interaction: Form simulation.
+         - ROE Scatter Chart (Chart.js) -> Goal: Visualize Notebook 21's "Bicep vs Diet" ROI logic. Interaction: Hover tooltips.
+         - Projection Bar Chart (Chart.js) -> Goal: Financial forecasting. Interaction: Linked to sliders.
+         - CSS Grids/Flexbox for "Command Center" panels -> Goal: Build credibility through a high-tech SaaS look.
+         - NO SVG/Mermaid used. Strict CSS/Canvas implementation. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+</head>
+<body class="antialiased selection:bg-brand-500 selection:text-white font-sans">
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full bg-surface-950/90 backdrop-blur-md border-b border-white/5 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 bg-brand-500 rounded flex items-center justify-center text-white font-black">Z</div>
+                    <span class="font-bold text-white tracking-wide">SYSTEMS<span class="text-brand-500">_AI</span></span>
+                </div>
+                <div class="hidden md:flex space-x-6">
+                    <a href="#psychology" class="text-xs font-bold text-slate-400 hover:text-white uppercase tracking-widest transition">Diagnosis</a>
+                    <a href="#frontend" class="text-xs font-bold text-slate-400 hover:text-white uppercase tracking-widest transition">Frontend (AI)</a>
+                    <a href="#backend" class="text-xs font-bold text-brand-400 hover:text-brand-300 uppercase tracking-widest transition">Backend (ROE)</a>
+                    <a href="#calculator" class="text-xs font-bold text-slate-400 hover:text-white uppercase tracking-widest transition">Projections</a>
+                </div>
+                <a href="#offer" class="bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded text-xs font-bold uppercase tracking-widest border border-white/10 transition">Initialize Trial</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="pt-32 pb-20 px-4 max-w-7xl mx-auto flex flex-col items-center text-center">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface-800 border border-white/10 text-slate-300 text-[10px] font-bold uppercase tracking-widest mb-6">
+            <span class="relative w-2 h-2 rounded-full bg-green-500 status-dot"></span>
+            System Architecture Protocol Active
+        </div>
+        <h1 class="text-5xl md:text-7xl font-black text-white mb-6 uppercase tracking-tighter leading-none">
+            Stop guessing.<br>
+            <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-400 to-brand-600">Start scaling.</span>
+        </h1>
+        <p class="text-lg text-slate-400 max-w-2xl mx-auto mb-10">
+            A comprehensive, fully-integrated ecosystem built for Zafir Anam. We combine empathetic AI frontends with ruthless Meta API backend tracking to turn your views into predictable, recurring revenue.
+        </p>
+    </section>
+
+    <!-- 1. The Diagnosis -->
+    <section id="psychology" class="py-16 bg-surface-900 border-y border-white/5">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="grid md:grid-cols-2 gap-8 items-center">
+                <div>
+                    <div class="text-brand-500 font-bold text-xs uppercase tracking-widest mb-2">Phase 1: The Diagnosis</div>
+                    <h2 class="text-3xl font-black text-white uppercase mb-4">The Intimidation Gap</h2>
+                    <p class="text-slate-400 mb-6 leading-relaxed">
+                        Your current CTA: <em>"DM for charges."</em><br><br>
+                        <strong>The Reality:</strong> As a pro athlete, your discipline is intimidating. Most beginners are terrified to DM you. They fear judgment and high prices. Your reliance on manual DMs is creating massive friction, causing you to lose 90% of warm leads before they even say hello.
+                    </p>
+                </div>
+                <div class="glass-panel p-6 rounded-2xl relative overflow-hidden">
+                    <div class="absolute -right-10 -top-10 text-9xl opacity-5">👁️</div>
+                    <h3 class="text-white font-bold mb-4 uppercase tracking-wider text-sm border-b border-white/10 pb-2">Funnel Leakage Report</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <div class="flex justify-between text-xs font-bold text-slate-400 mb-1"><span>Profile Views</span> <span>10,000</span></div>
+                            <div class="w-full bg-surface-950 h-2 rounded-full"><div class="bg-slate-600 h-2 rounded-full w-full"></div></div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-xs font-bold text-slate-400 mb-1"><span>Intent to Buy</span> <span>800</span></div>
+                            <div class="w-full bg-surface-950 h-2 rounded-full"><div class="bg-slate-500 h-2 rounded-full w-[8%]"></div></div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-xs font-bold text-brand-400 mb-1"><span>Actual DMs Sent (The Gap)</span> <span>15</span></div>
+                            <div class="w-full bg-surface-950 h-2 rounded-full"><div class="bg-brand-500 h-2 rounded-full w-[1.5%] shadow-[0_0_10px_rgba(249,115,22,0.5)]"></div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 2. Frontend AI Integration -->
+    <section id="frontend" class="py-24 bg-surface-950 relative">
+        <div class="max-w-7xl mx-auto px-4 lg:flex gap-12 items-center">
+            <div class="lg:w-1/2 mb-12 lg:mb-0">
+                <div class="text-brand-500 font-bold text-xs uppercase tracking-widest mb-2">Phase 2: Frontend AI</div>
+                <h2 class="text-3xl font-black text-white uppercase mb-4">Empathetic Automation</h2>
+                <p class="text-slate-400 mb-6">
+                    We replace the "DM me" barrier with a frictionless bio link. Once they submit their stats, the OpenClaw system acts as your personal closer—delivering free value and pitching your VIP program exactly 24 hours later, sounding exactly like you.
+                </p>
+                <button onclick="document.getElementById('simOverlay').classList.remove('hidden')" class="bg-brand-500 text-white px-6 py-3 rounded text-sm font-bold uppercase tracking-widest hover:bg-brand-400 transition shadow-[0_0_15px_rgba(249,115,22,0.3)]">
+                    ▶ Play Live Simulation
+                </button>
+            </div>
+
+            <!-- Frontend Visual Simulator -->
+            <div class="lg:w-1/2 relative">
+                <div class="glass-panel rounded-2xl p-4 flex gap-4">
+                    <!-- Step 1: Form -->
+                    <div class="flex-1 bg-surface-900 rounded-xl p-4 border border-white/5 opacity-50 transition-opacity duration-500" id="step1">
+                        <h4 class="text-[10px] text-brand-500 font-bold uppercase mb-4 tracking-widest">1. Bio Link Capture</h4>
+                        <div class="space-y-2 mb-4">
+                            <div class="h-8 bg-surface-800 rounded px-3 py-2 text-xs text-slate-400">Weight: 85kg</div>
+                            <div class="h-8 bg-surface-800 rounded px-3 py-2 text-xs text-slate-400">Goal: 75kg</div>
+                            <div class="h-8 bg-surface-800 rounded px-3 py-2 text-xs text-slate-400">Target: Belly Fat</div>
+                        </div>
+                    </div>
+                    <!-- Step 2: AI WhatsApp -->
+                    <div class="flex-1 bg-surface-900 rounded-xl p-4 border border-white/5 opacity-50 transition-opacity duration-500" id="step2">
+                        <h4 class="text-[10px] text-brand-500 font-bold uppercase mb-4 tracking-widest">2. AI WhatsApp Close</h4>
+                        <div class="space-y-3">
+                            <div class="bg-[#202c33] p-2 rounded-lg text-[10px] text-slate-300 chat-bubble-ai border border-white/5">
+                                Brother, Zafir's AI here. To hit 75kg safely, target 2,200 cals/day. Cut liquid cals first! 💪
+                            </div>
+                            <div class="text-center text-[8px] text-slate-500">24 hours later</div>
+                            <div class="bg-[#202c33] p-2 rounded-lg text-[10px] text-slate-300 chat-bubble-ai border border-brand-500/30">
+                                Ready for Zafir's custom 4-week VIP plan? Reply READY. 🏆
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Simulation Overlay -->
+                <div id="simOverlay" class="hidden absolute inset-0 bg-surface-950/90 backdrop-blur rounded-2xl flex flex-col items-center justify-center border border-brand-500/50">
+                    <div class="text-brand-500 text-3xl mb-2 animate-bounce">↓</div>
+                    <div class="text-white font-bold uppercase tracking-wider text-sm">Lead Captured</div>
+                    <div class="text-slate-400 text-xs mb-4">Transferring to Backend Database...</div>
+                    <button onclick="document.getElementById('simOverlay').classList.add('hidden')" class="text-xs text-brand-500 underline">Reset</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. Backend Analytics Engine (Notebook 21 Implementation) -->
+    <section id="backend" class="py-20 bg-surface-900 border-y border-white/5 relative overflow-hidden">
+        <!-- Grid Background -->
+        <div class="absolute inset-0 opacity-5" style="background-image: linear-gradient(#fb923c 1px, transparent 1px), linear-gradient(90deg, #fb923c 1px, transparent 1px); background-size: 40px 40px;"></div>
+        
+        <div class="max-w-7xl mx-auto px-4 relative z-10">
+            <div class="text-center mb-12">
+                <div class="text-brand-500 font-bold text-xs uppercase tracking-widest mb-2">Phase 3: Backend Engine</div>
+                <h2 class="text-3xl font-black text-white uppercase mb-4">Return On Energy (ROE) Tracking</h2>
+                <p class="text-slate-400 max-w-2xl mx-auto">
+                    Likes don't buy groceries. We integrate the Meta Graph API with your AI Funnel via UTM tracking (`?source=ig&post=XYZ`). Our backend tells you exactly which videos are wasting your time, and which ones are generating hard cash. Stop burning out.
+                </p>
+            </div>
+
+            <div class="grid lg:grid-cols-3 gap-6">
+                <!-- System Status Panel -->
+                <div class="glass-panel p-6 rounded-xl flex flex-col justify-between">
+                    <div>
+                        <h3 class="text-white font-bold text-sm uppercase tracking-wider mb-4 flex items-center gap-2">
+                            <span>📡</span> API Integrations
+                        </h3>
+                        <div class="space-y-4">
+                            <div class="flex items-center justify-between p-3 bg-surface-950 rounded border border-white/5">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-6 h-6 bg-blue-600 rounded flex items-center justify-center text-white text-xs font-bold">f</div>
+                                    <span class="text-xs text-slate-300 font-semibold">Meta Graph API</span>
+                                </div>
+                                <span class="text-[10px] text-green-500 font-bold uppercase tracking-widest flex items-center gap-1"><span class="w-1.5 h-1.5 bg-green-500 rounded-full"></span> Synced</span>
+                            </div>
+                            <div class="flex items-center justify-between p-3 bg-surface-950 rounded border border-white/5">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-6 h-6 bg-amber-500 rounded flex items-center justify-center text-white text-xs font-bold">🔥</div>
+                                    <span class="text-xs text-slate-300 font-semibold">Firebase DB</span>
+                                </div>
+                                <span class="text-[10px] text-green-500 font-bold uppercase tracking-widest flex items-center gap-1"><span class="w-1.5 h-1.5 bg-green-500 rounded-full"></span> Active</span>
+                            </div>
+                            <div class="flex items-center justify-between p-3 bg-surface-950 rounded border border-white/5">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-6 h-6 bg-[#25D366] rounded flex items-center justify-center text-white text-[10px]">WA</div>
+                                    <span class="text-xs text-slate-300 font-semibold">OpenClaw WA Node</span>
+                                </div>
+                                <span class="text-[10px] text-green-500 font-bold uppercase tracking-widest flex items-center gap-1"><span class="w-1.5 h-1.5 bg-green-500 rounded-full"></span> Routing</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-6 p-3 bg-brand-500/10 border border-brand-500/20 rounded text-[10px] text-brand-400">
+                        <strong>Live Log:</strong> Captured UTM source "IG_Reel_Nov12" linked to Lead ID #4092.
+                    </div>
+                </div>
+
+                <!-- ROE Data Table -->
+                <div class="glass-panel p-6 rounded-xl lg:col-span-2">
+                    <h3 class="text-white font-bold text-sm uppercase tracking-wider mb-4">Content Performance vs. Revenue (Last 7 Days)</h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-xs">
+                            <thead class="text-slate-500 uppercase tracking-widest border-b border-white/10">
+                                <tr>
+                                    <th class="pb-3 font-semibold">Content Asset (UTM)</th>
+                                    <th class="pb-3 font-semibold text-center">Time Spent</th>
+                                    <th class="pb-3 font-semibold text-center">Meta Views</th>
+                                    <th class="pb-3 font-semibold text-center">AI Sales</th>
+                                    <th class="pb-3 font-semibold text-right text-brand-400">Rev / Hour (ROE)</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-slate-300 divide-y divide-white/5">
+                                <tr>
+                                    <td class="py-4 flex items-center gap-2">🎥 <span class="truncate">Bicep_Form_Fix_v2</span></td>
+                                    <td class="py-4 text-center">2.0 hrs</td>
+                                    <td class="py-4 text-center">15,000</td>
+                                    <td class="py-4 text-center">2 (10k ৳)</td>
+                                    <td class="py-4 text-right font-bold text-red-400">5,000 ৳ / hr</td>
+                                </tr>
+                                <tr>
+                                    <td class="py-4 flex items-center gap-2">📝 <span class="truncate">Diet_Myths_Text</span></td>
+                                    <td class="py-4 text-center">0.2 hrs</td>
+                                    <td class="py-4 text-center">3,200</td>
+                                    <td class="py-4 text-center">3 (15k ৳)</td>
+                                    <td class="py-4 text-right font-bold text-green-400">75,000 ৳ / hr</td>
+                                </tr>
+                                <tr>
+                                    <td class="py-4 flex items-center gap-2">📸 <span class="truncate">Physique_Update_Nov</span></td>
+                                    <td class="py-4 text-center">0.5 hrs</td>
+                                    <td class="py-4 text-center">8,500</td>
+                                    <td class="py-4 text-center">0 (0 ৳)</td>
+                                    <td class="py-4 text-right font-bold text-slate-500">0 ৳ / hr</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <!-- ROE Scatter Plot -->
+                    <div class="mt-6 border-t border-white/10 pt-6">
+                        <h4 class="text-[10px] text-slate-500 uppercase tracking-widest font-bold mb-2 text-center">Visualization: Effort vs. Actual Dollars</h4>
+                        <!-- Chart Container strictly adhering to requirements -->
+                        <div class="chart-container h-48 min-h-[200px]">
+                            <canvas id="roeChart"></canvas>
+                        </div>
+                        <p class="text-[10px] text-center text-slate-400 mt-2">Top Left quadrant is optimal: Low effort, High revenue.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. Revenue Projections (Interactive Engine) -->
+    <section id="calculator" class="py-24 bg-surface-950">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="text-center mb-12">
+                <div class="text-brand-500 font-bold text-xs uppercase tracking-widest mb-2">Phase 4: Scaling Model</div>
+                <h2 class="text-3xl font-black text-white uppercase mb-4">System ROI Calculator</h2>
+                <p class="text-slate-400">Adjust the parameters to project the automated revenue generated by the OpenClaw architecture.</p>
+            </div>
+
+            <div class="glass-panel rounded-2xl overflow-hidden lg:flex border border-white/10">
+                <!-- Controls -->
+                <div class="lg:w-1/3 bg-surface-900 p-8 border-b lg:border-b-0 lg:border-r border-white/5">
+                    <div class="space-y-8">
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Total Audience</label>
+                                <span id="valFollowers" class="font-black text-white">6,300</span>
+                            </div>
+                            <input type="range" id="sliderFollowers" min="1000" max="20000" step="100" value="6300" oninput="updateProjections()">
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Link Click Rate</label>
+                                <span id="valCTR" class="font-black text-white">2%</span>
+                            </div>
+                            <input type="range" id="sliderCTR" min="0.5" max="10" step="0.5" value="2" oninput="updateProjections()">
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">AI Close Rate</label>
+                                <span id="valClose" class="font-black text-white">5%</span>
+                            </div>
+                            <input type="range" id="sliderClose" min="1" max="20" step="1" value="5" oninput="updateProjections()">
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">VIP Coaching Fee</label>
+                                <span id="valPrice" class="font-black text-white">5,000 ৳</span>
+                            </div>
+                            <input type="range" id="sliderPrice" min="1000" max="15000" step="500" value="5000" oninput="updateProjections()">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Outputs -->
+                <div class="lg:w-2/3 p-8 bg-surface-950 flex flex-col">
+                    <div class="grid grid-cols-3 gap-4 mb-8">
+                        <div class="p-4 bg-surface-900 rounded-xl border border-white/5 text-center">
+                            <div class="text-[9px] text-slate-400 font-bold uppercase tracking-widest mb-1">Automated Leads</div>
+                            <div id="outLeads" class="text-2xl font-black text-white">126</div>
+                        </div>
+                        <div class="p-4 bg-surface-900 rounded-xl border border-white/5 text-center">
+                            <div class="text-[9px] text-slate-400 font-bold uppercase tracking-widest mb-1">New VIPs (Mo)</div>
+                            <div id="outClients" class="text-2xl font-black text-white">6</div>
+                        </div>
+                        <div class="p-4 bg-brand-500/10 rounded-xl border border-brand-500/30 text-center shadow-[inset_0_0_15px_rgba(249,115,22,0.1)]">
+                            <div class="text-[9px] text-brand-400 font-bold uppercase tracking-widest mb-1">Projected Rev/Mo</div>
+                            <div id="outRevenue" class="text-2xl font-black text-brand-500">30k ৳</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Chart Container strictly adhering to requirements -->
+                    <div class="chart-container flex-1">
+                        <canvas id="projectionChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- The Close -->
+    <section id="offer" class="py-24 bg-brand-600 text-center relative overflow-hidden text-white">
+        <!-- Background Pattern -->
+        <div class="absolute inset-0 opacity-10" style="background-image: repeating-linear-gradient(45deg, #000 0, #000 2px, transparent 2px, transparent 8px);"></div>
+        
+        <div class="max-w-2xl mx-auto px-4 relative z-10">
+            <h2 class="text-4xl font-black uppercase mb-6 tracking-tight">Deploy The System</h2>
+            <p class="text-lg font-medium mb-10 text-brand-100">
+                7 Days. Zero Cost. Complete Backend Access.<br>If the AI doesn't convert your followers into cash, we shut it down. You keep all the leads.
+            </p>
+            <button onclick="alert('Deployment Request Sent. Waiting for API Keys...')" class="bg-surface-950 text-white px-10 py-5 rounded-xl font-black text-xl uppercase tracking-widest hover:bg-black transition-colors shadow-2xl hover:shadow-black/50 hover:-translate-y-1 inline-flex items-center gap-3">
+                <span class="w-3 h-3 bg-brand-500 rounded-full animate-pulse"></span>
+                Initialize Trial
+            </button>
+        </div>
+    </section>
+
+    <!-- Application Logic -->
+    <script>
+        // --- 1. ROE Scatter Plot (Backend Section) ---
+        function initROEChart() {
+            const ctx = document.getElementById('roeChart').getContext('2d');
+            Chart.defaults.font.family = "'Inter', sans-serif";
+            
+            new Chart(ctx, {
+                type: 'scatter',
+                data: {
+                    datasets: [
+                        {
+                            label: 'Bicep Video (High Effort, Low Yield)',
+                            data: [{ x: 2.0, y: 10000 }],
+                            backgroundColor: '#ef4444', // red-500
+                            pointRadius: 8,
+                            pointHoverRadius: 10
+                        },
+                        {
+                            label: 'Diet Text Post (Low Effort, High Yield)',
+                            data: [{ x: 0.2, y: 15000 }],
+                            backgroundColor: '#22c55e', // green-500
+                            pointRadius: 8,
+                            pointHoverRadius: 10
+                        },
+                        {
+                            label: 'Physique Pic (Medium Effort, Zero Yield)',
+                            data: [{ x: 0.5, y: 0 }],
+                            backgroundColor: '#64748b', // slate-500
+                            pointRadius: 8,
+                            pointHoverRadius: 10
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: '#0f172a',
+                            titleColor: '#f8fafc',
+                            bodyColor: '#cbd5e1',
+                            callbacks: {
+                                label: function(ctx) {
+                                    return ctx.dataset.label + ': ' + ctx.parsed.x + 'hrs | ' + (ctx.parsed.y/1000) + 'k ৳';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            title: { display: true, text: 'Hours Spent Creating Content', color: '#64748b', font: {size: 10, weight: 'bold'} },
+                            grid: { color: 'rgba(255,255,255,0.05)' },
+                            ticks: { color: '#94a3b8' }
+                        },
+                        y: {
+                            title: { display: true, text: 'Revenue Generated (BDT)', color: '#64748b', font: {size: 10, weight: 'bold'} },
+                            grid: { color: 'rgba(255,255,255,0.05)' },
+                            ticks: { color: '#94a3b8', callback: function(value) { return (value/1000) + 'k'; } }
+                        }
+                    }
+                }
+            });
+        }
+
+        // --- 2. Projection Calculator ---
+        let projChart = null;
+
+        const formatBDT = (num) => {
+            if (num >= 1000) return (num / 1000).toFixed(1).replace(/\.0$/, '') + 'k ৳';
+            return num + ' ৳';
+        };
+
+        function updateProjections() {
+            const f = parseInt(document.getElementById('sliderFollowers').value);
+            const ctr = parseFloat(document.getElementById('sliderCTR').value);
+            const close = parseFloat(document.getElementById('sliderClose').value);
+            const price = parseInt(document.getElementById('sliderPrice').value);
+
+            document.getElementById('valFollowers').innerText = f.toLocaleString();
+            document.getElementById('valCTR').innerText = ctr.toFixed(1) + '%';
+            document.getElementById('valClose').innerText = close.toFixed(1) + '%';
+            document.getElementById('valPrice').innerText = new Intl.NumberFormat('en-IN').format(price) + ' ৳';
+
+            const leads = Math.round(f * (ctr / 100));
+            const clients = Math.round(leads * (close / 100));
+            const rev = clients * price;
+
+            document.getElementById('outLeads').innerText = leads.toLocaleString();
+            document.getElementById('outClients').innerText = clients.toLocaleString();
+            document.getElementById('outRevenue').innerText = formatBDT(rev);
+
+            if(projChart) {
+                // Compounding growth over 3 months
+                projChart.data.datasets[0].data = [rev, rev * 2, rev * 3];
+                projChart.update();
+            }
+        }
+
+        function initProjectionChart() {
+            const ctx = document.getElementById('projectionChart').getContext('2d');
+            projChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Month 1', 'Month 2', 'Month 3'],
+                    datasets: [{
+                        label: 'Cumulative AI Revenue',
+                        data: [0, 0, 0],
+                        borderColor: '#f97316',
+                        backgroundColor: 'rgba(249, 115, 22, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4,
+                        pointBackgroundColor: '#ea580c',
+                        pointBorderColor: '#020617',
+                        pointBorderWidth: 2,
+                        pointRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: { backgroundColor: '#0f172a', callbacks: { label: function(ctx) { return formatBDT(ctx.parsed.y); } } }
+                    },
+                    scales: {
+                        y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94a3b8', callback: function(value) { return (value/1000) + 'k'; } }, border: {display:false} },
+                        x: { grid: { display: false }, ticks: { color: '#94a3b8', font: {weight: 'bold'} }, border: {display:false} }
+                    }
+                }
+            });
+            updateProjections();
+        }
+
+        // Initialize Everything
+        window.onload = () => {
+            initROEChart();
+            initProjectionChart();
+
+            // Simple animation sequence for the UI simulator
+            setTimeout(() => {
+                document.getElementById('step1').classList.remove('opacity-50');
+                document.getElementById('step1').classList.add('border-brand-500', 'shadow-[0_0_15px_rgba(249,115,22,0.2)]');
+                
+                setTimeout(() => {
+                    document.getElementById('step2').classList.remove('opacity-50');
+                    document.getElementById('step2').classList.add('border-brand-500', 'shadow-[0_0_15px_rgba(249,115,22,0.2)]');
+                }, 1500);
+            }, 1000);
+        };
+    </script>
+</body>
+</html>
